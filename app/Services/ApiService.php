@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 
 class ApiService
 {
@@ -25,5 +24,15 @@ class ApiService
         ];
         $response = $this->client->request('GET', $url, $options);
         return json_decode($response->getBody()->getContents());
+    }
+
+    public function cache($name, $url, $httpParams = '')
+    {
+        $cacheData = cache()->get('movies' . $httpParams);
+        if (is_null($cacheData)) {
+            $cacheData = $this->getData($url . $httpParams);
+            cache()->set('movies' . $httpParams, $cacheData, env('DEFAULT_EXPIRATION_TIME'));
+        }
+        return $cacheData;
     }
 }

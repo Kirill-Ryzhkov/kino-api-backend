@@ -6,7 +6,6 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-
 class ApiController extends Controller
 {
     private ApiService $service;    
@@ -23,7 +22,7 @@ class ApiController extends Controller
      * response: JsonResponse
      */
     public function getMovies(Request $request)
-    {
+    {   
         $request->validate([
             'query' => ['string'],
             'offset' => ['integer'],
@@ -39,7 +38,7 @@ class ApiController extends Controller
             'lang' => $request->get('lang', 'en')
         ];
 
-        return response()->json($this->service->getData('https://netflix54.p.rapidapi.com/search/?' . http_build_query($params)));
+        return response()->json($this->service->cache('movies', 'https://netflix54.p.rapidapi.com/search/?', http_build_query($params)));
     }
 
     /**
@@ -60,6 +59,7 @@ class ApiController extends Controller
             'lang' => $request->get('lang', 'en'),
             'ids' => $id
         ];
-        return response()->json($this->service->getData('https://netflix54.p.rapidapi.com/title/details/?' . http_build_query($params)));
+
+        return response()->json($this->service->cache('movie', 'https://netflix54.p.rapidapi.com/title/details/?', http_build_query($params)));
     }
 }
