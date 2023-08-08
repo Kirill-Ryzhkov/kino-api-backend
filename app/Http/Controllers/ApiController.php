@@ -23,22 +23,8 @@ class ApiController extends Controller
      */
     public function getMovies(Request $request)
     {   
-        $request->validate([
-            'query' => ['string'],
-            'offset' => ['integer'],
-            'limit' => ['integer'],
-            'lang' => ['string', Rule::in(['en', 'fr', 'ar', 'ru', 'es'])]
-        ]);
-
-        $params = [
-            'query' => $request->get('query', '*'),
-            'offset' => $request->get('offset', 0),
-            'limit_titles' => $request->get('limit', 50),
-            'limit_suggestions' => $request->get('limit', 10),
-            'lang' => $request->get('lang', 'en')
-        ];
-
-        return response()->json($this->service->cache('movies', 'https://netflix54.p.rapidapi.com/search/?', http_build_query($params)));
+        $this->service->validateData($request);
+        return response()->json($this->service->getListOfMovies($request));
     }
 
     /**
@@ -51,15 +37,7 @@ class ApiController extends Controller
      */
     public function getMovie($id, Request $request)
     {
-        $request->validate([
-            'lang' => ['string', Rule::in(['en', 'fr', 'ar', 'ru', 'es'])]
-        ]);
-
-        $params = [
-            'lang' => $request->get('lang', 'en'),
-            'ids' => $id
-        ];
-
-        return response()->json($this->service->cache('movie', 'https://netflix54.p.rapidapi.com/title/details/?', http_build_query($params)));
+        $this->service->validateLang($request);
+        return response()->json($this->service->getMovieById($request, $id));
     }
 }

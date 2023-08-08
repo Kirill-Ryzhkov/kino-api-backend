@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FavoriteMovie;
+use App\Services\ApiService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
@@ -35,8 +37,13 @@ class MovieController extends Controller
      * params:
      * response: JsonResponse
      */
-    public function listFavorite() 
+    public function listFavorite(Request $request) 
     {
-        return response()->json(FavoriteMovie::where('user_id', Auth::user()->id)->get());
+        $api = new ApiService();
+
+        $api->validateLang($request);
+        $favorite = implode(',', FavoriteMovie::where('user_id', Auth::user()->id)->get()->pluck('movie_id')->toArray());
+
+        return response()->json($api->getMovieById($request, $favorite));
     }
 }
