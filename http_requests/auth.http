@@ -1,0 +1,39 @@
+### login user
+POST {{host}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "admin3@admin.com",
+    "password": "temppassword"
+}
+
+### get user
+GET {{host}}/users
+Authorization: {{token}}
+Accept: application/json
+
+
+### update user
+PUT {{host}}/users/update
+Authorization: {{token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Admin3",
+    "email": "admin3@admin.com",
+    "password": "temppassword"
+}
+
+
+### logout user
+POST {{host}}/users/logout
+Authorization: {{token}}
+Accept: application/json
+
+
+### get movies
+GET {{host}}/get-movies
+Authorization: {{token}}
+Accept: application/json
