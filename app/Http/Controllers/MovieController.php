@@ -27,7 +27,7 @@ class MovieController extends Controller
         } else {
             $result['deleted'] = $favorite->delete();
         }
-        return response()->json($result);
+        return response()->json($result, 201);
     }
 
     /**
